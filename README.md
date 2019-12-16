@@ -1,4 +1,4 @@
-### Abstract
+### Introduction
 In many applications of business and marketing analytics, predictive models are fit
 using hierarchically structured data: common characteristics of products, customers, or
 webpages are represented as categorical variables, and each category can be split up into
@@ -11,11 +11,10 @@ the higher levels, avoiding the need to explore many lower-level features and gr
 reducing the computational cost of screening. The practical potential of the method is
 demonstrated in a case application on user-brand interaction data from Facebook.
 
-### Introduction
 
-Various feature selection algorithms, including Lasso, Sure Independence Screening (SIS), Streamwise (SR), False Discovery Rate (FDR), and our proposed DDC.
+- Various feature selection algorithms, including Lasso, Sure Independence Screening (SIS), Streamwise (SR), False Discovery Rate (FDR), and our proposed DDC.
 
-We use both simulation and real data from Facebook to validate our proposed algorithm DDC, with comparison to all above baselines regarding effectiveness and efficiency.
+- We use both simulation and real data from Facebook to validate our proposed algorithm DDC, with comparison to all above baselines regarding effectiveness and efficiency.
 
 ### Content
 
