@@ -1,1 +1,15 @@
 Use the followign command to generate simulated data (small and large)
+
+1. # generate simulated Y (label)
+
+python generate_simulated_Y.py > y_name
+
+
+2. # generate a simulated dataset with n samles and p features
+
+python generate_simulated_data.py 100 5500 > simulated_data_100_5500.txt
+
+
+3. # run simulation: first generates 100 simuated datasets and then run feature selections
+
+python run_simulation.py 100 5500 > 100_5500_tpr_fpr_time.txt
