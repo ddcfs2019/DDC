@@ -25,7 +25,7 @@ demonstrated in a case application on user-brand interaction data from Facebook.
 - codes:
   - real/: all implemented algorithms on the real data (small-scale and large-scale)
    
-  - simulation/: all implemented algorithms on the simuated data (100 datasets for two different scales: n=100, p=5,500 and n=1,000, p=170,000)
+  - simulation/: all implemented algorithms on the simuated data (100 datasets each for two different scales: n=100, p=5,500 and n=1,000, p=170,000)
   
 
 ### Prerequisite
