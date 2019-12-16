@@ -7,6 +7,9 @@ Each line: uid, pid, label(positive -1/negative -0 user)
 fid_brandname_cateogory.txt
 Each line: facebook brand id, facebook brand name, facebook brand category
 
+pos_neg_users.txt
+Each line: user_id, label (1: positive; 0: negative)
+
 
 1. # generate a large dataset in a format of traditional machine learning.
 Each line is: user_id,features,label
