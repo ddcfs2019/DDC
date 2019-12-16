@@ -6,11 +6,11 @@ We use both simulation and real data from Facebook to validate our proposed algo
 
 ### Content
 
-- data folder:
+- data:
   - data/simulation
   - data/real
   
-- code folders:
+- codes:
   - real/: all implemented algorithms on the real data (small-scale and large-scale)
    
   - simulation/: all implemented algorithms on the simuated data (100 datasets for two different scales: n=100, p=5500 and n=1000, p=170000)
