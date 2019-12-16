@@ -29,8 +29,6 @@ demonstrated in a case application on user-brand interaction data from Facebook.
   
 
 ### Prerequisite
-- Python 3.x
-
-- Pakcages:
+- Python 3.x with the following packages installed
   - Numpy
   - Scikit-learn
