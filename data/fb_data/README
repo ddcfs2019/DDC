@@ -1,0 +1,21 @@
+Use the following commands to generate required files for feature selection procedures. All are based on Python 3.
+
+1. # generate a large dataset in a format of traditional machine learning.
+Each line is: user_id,features,label
+
+python convert_raw_to_features.py > large_features.txt
+
+
+2. # generate a small dataset small_features.txt with randomly selected 50% of features and 20% of samples.
+
+python random_select_small_dataset.py > small_features.txt
+
+
+3. # convert feature-based files into hierarchical representation for FDR and DDC.
+
+python gen_hierarchy_features.py large_features.txt > large.txt
+python gen_hierarchy_features.py small_features.txt > small.txt
+
+
+large_features.txt and small_features.txt will be considered as inputs for Lasso, SIS, and SR algorithms, while large.txt and
+small.txt will be sent to FDR and DDC.
