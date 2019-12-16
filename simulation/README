@@ -1,9 +1,11 @@
 Please change the line 18 and line 27 in the code of run_simulation.py for the corresponding feature selection. For example,
 
 If DDC, 
+```
   v = np.linspace(0, 1, 50)
   command = 'python -W ignore ddc.py ' + fname + ' ' + str(float(v[k])) + ' > line.txt'
-  
+``` 
+ 
 If FDR,
   v = np.linspace(0, 0.1, 50)
   command = 'python -W ignore fdr.py ' + fname + ' ' + str(float(v[k])) + ' > line.txt'
