@@ -1,6 +1,13 @@
 
 Use the following commands to generate required files for feature selection procedures. All are based on Python 3.
 
+uid_pid.txt
+Each line: uid, pid, label(positive -1/negative -0 user)
+
+fid_brandname_cateogory.txt
+Each line: facebook brand id, facebook brand name, facebook brand category
+
+
 1. # generate a large dataset in a format of traditional machine learning.
 Each line is: user_id,features,label
 
