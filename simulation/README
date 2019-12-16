@@ -1,0 +1,25 @@
+Please change the line 18 and line 27 in the code of run_simulation.py for the corresponding feature selection. For example,
+
+If DDC, 
+  v = np.linspace(0, 1, 50)
+  command = 'python -W ignore ddc.py ' + fname + ' ' + str(float(v[k])) + ' > line.txt'
+  
+If FDR,
+  v = np.linspace(0, 0.1, 50)
+  command = 'python -W ignore fdr.py ' + fname + ' ' + str(float(v[k])) + ' > line.txt'
+  
+If SR - w0 fixed,
+  v = np.linspace(0, 1, 50)
+  command = 'python -W ignore sr.py ' + fname + ' 0.5 ' + str(float(v[k])) + ' > line.txt'
+  
+If SR - alpha_delta fixed,
+  v = np.linspace(0, 1, 50)
+  command = 'python -W ignore sr.py ' + fname + ' ' + str(float(v[k])) + ' 0.5 > line.txt'
+  
+If SIS,
+  v = np.linspace(1, 50, 50)
+  command = 'python -W ignore sis.py ' + fname + ' ' + str(float(v[k])) + ' > line.txt'
+  
+If Lasso,
+  v = np.linspace(0, 0.1, 50)
+  command = 'python -W ignore lasso.py ' + fname + ' ' + str(float(v[k])) + ' > line.txt'
