@@ -98,7 +98,6 @@ clf = linear_model.LogisticRegression(random_state=0)
 cv = KFold(n_splits=10, shuffle=True)
 fprs = []
 tprs = []
-percent_features = []
 
 for w in np.arange(0.1,1,0.1): # tunable parameters
 	for alpha_delta in np.arange(0.1,1,0.1): # tunable parameters
@@ -130,7 +129,6 @@ for w in np.arange(0.1,1,0.1): # tunable parameters
 			continue
 
 		new_X = X[:,pred_idx]
-		#percent_features.append(float(len(pred_idx))/X.shape[1])
 
 		es = time.time()
 		selection_times.append(es-ss)
