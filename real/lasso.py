@@ -62,7 +62,6 @@ estimation_times = []
 cv = KFold(n_splits=5, shuffle=True)
 fprs = []
 tprs = []
-percent_features = []
 
 for lda in np.arange(0.01,0.1,0.01): # tunable parameters
 	# build the model
@@ -76,7 +75,6 @@ for lda in np.arange(0.01,0.1,0.01): # tunable parameters
 		if coefs[i] != 0:
 			selected_indx.append(i)
 	new_X = X[:,selected_indx]
-	#percent_features.append(float(len(selected_indx))/X.shape[1])
 
 
 	es = time.time()
