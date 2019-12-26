@@ -91,7 +91,6 @@ estimation_times = []
 cv = KFold(n_splits=10, shuffle=True)
 fprs = []
 tprs = []
-percent_features = []
 
 for q in np.arange(0.1,1,0.1): # tunable parameters
 	ss = time.time()
@@ -152,7 +151,6 @@ for q in np.arange(0.1,1,0.1): # tunable parameters
 			pred_idx.append(i)
 
 	new_X = X[:,pred_idx]
-	#percent_features.append(float(len(pred_idx))/X.shape[1])
 
 
 	es = time.time()
