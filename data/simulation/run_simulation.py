@@ -2,8 +2,8 @@ import os,sys
 
 import numpy as np
 
-# generate 100 dataset
-for i in range(100):
+# generate 500 and 50 datasets for larger and smaller cases, respectively
+for i in range(500): # for i in range(50):
 	fname = 'simulated_data_100_5500_'+str(i)+'.txt'
 	os.system('python -W ignore generate_simulated_data.py 100 5500 > ' + fname)
 
