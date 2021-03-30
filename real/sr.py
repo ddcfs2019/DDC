@@ -4,6 +4,7 @@ import time,random
 import numpy as np 
 
 from sklearn import linear_model
+from scipy.sparse import csr_matrix
 import scipy.stats as stat
 from sklearn.model_selection import KFold
 
@@ -142,7 +143,7 @@ for w in np.arange(0.1,1,0.1): # tunable parameters
 
 			for train,test in cv.split(new_X,y):
 				try:
-					probas_ = clf.fit(X[train],y[train]).predict_proba(new_X[test])
+					probas_ = clf.fit(csr_matrix(X[train]),y[train]).predict_proba(new_X[test])
 					pred = np.where(probas_[:,1]>threshold,1,0)
 					tpr, fpr = tpr_fpr(y[test],pred)
 					tpr_folds.append(tpr)
