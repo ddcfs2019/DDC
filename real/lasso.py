@@ -5,6 +5,7 @@ import random
 import numpy as np 
 
 from sklearn import linear_model
+from scipy.sparse import csr_matrix
 from sklearn.model_selection import KFold
 
 
@@ -32,7 +33,7 @@ for i in range(len(lines)):
 	X.append(sample)
 	y.append(int(arr[-1].strip()))
 
-X = np.array(X)
+X = csr_matrix(np.array(X))
 y = np.array(y)
 
 
