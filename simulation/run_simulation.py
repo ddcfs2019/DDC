@@ -21,7 +21,7 @@ for k in range(1,len(v)-1):
 	fprs = []
 	times = []
 
-	for i in range(10):
+	for i in range(100):
 		fname = 'simulated_data_100_5500_'+str(i)+'.txt'
 
 		command = 'python -W ignore ddc.py ' + fname + ' ' + str(float(v[k])) + ' > line.txt'
