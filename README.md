@@ -26,6 +26,15 @@ demonstrated in a case application on user-brand interaction data from Facebook.
   - real/: all implemented algorithms on the real data (small-scale and large-scale)
    
   - simulation/: all implemented algorithms on the simuated data (100 datasets each for two different scales: n=100, p=5,500 and n=1,000, p=170,000)
+
+### Suggested hyperparameter setting
+
+- lambda in Lasso: 0 - 0.1
+- d in SIS: 1 - 50 (i.e., [d/log(n)] top percent of features selected)
+- q in FDR: 0 - 0.1
+- SR-w0 fixed: 0.5, alpha_delta: 0 - 1
+- SR-alpha_delta fixed: 0.5, w0: 0 - 1
+- Kn in DDC: 0 - 1
   
 
 ### Prerequisite
