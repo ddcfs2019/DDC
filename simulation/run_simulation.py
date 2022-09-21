@@ -24,7 +24,7 @@ for i in range(10):
 # ddc: 0-1
 alg = sys.argv[1]
 
-for i in range(5):
+for i in range(50):
 	#fname = 'data_S_100_5500/simulated_data_100_5500_'+str(i)+'.txt'
 	fname = 'data_S_1000_170000/simulated_data_1000_170000_'+str(i)+'.txt'
 
