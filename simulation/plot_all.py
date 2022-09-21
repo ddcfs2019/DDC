@@ -100,7 +100,6 @@ plt.xlabel('False Positive Rate')
 plt.ylabel('True Positive Rate')
 plt.legend(loc=4)
 plt.show()
-sys.exit(1)
 
 '''
 methods = ('Lasso','SIS','SR','FDR','DDC')
