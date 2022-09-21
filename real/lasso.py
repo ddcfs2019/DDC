@@ -5,6 +5,7 @@ import random
 import numpy as np 
 
 from sklearn import linear_model
+from sklearn.ensemble import RandomForestClassifier
 from scipy.sparse import csr_matrix
 from sklearn.model_selection import KFold
 
@@ -85,7 +86,7 @@ for lda in np.arange(0.01,0.1,0.01): # tunable parameters
 
 		se = time.time()
 
-		clf = linear_model.LogisticRegression(random_state=7)
+		clf = RandomForestClassifier(random_state=7)
 
 		tpr_folds = []
 		fpr_folds = []
@@ -103,7 +104,8 @@ for lda in np.arange(0.01,0.1,0.01): # tunable parameters
 
 		fprs.append(np.mean(fpr_folds))
 		tprs.append(np.mean(tpr_folds))
-		print(lda,',',threshold,',',np.mean(fpr_folds),',',np.mean(tpr_folds))
 
 		ee = time.time()
 		estimation_times.append(ee-se)
+		
+		print(lda,',',threshold,',',np.mean(fpr_folds),',',np.mean(tpr_folds),',',ee-se)
