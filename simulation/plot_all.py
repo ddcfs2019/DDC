@@ -101,18 +101,6 @@ plt.ylabel('True Positive Rate')
 plt.legend(loc=4)
 plt.show()
 
-'''
-methods = ('Lasso','SIS','SR','FDR','DDC')
-x = np.arange(len(methods))
-y = np.round([lasso_auc,sis_auc,sr_auc,fdr_auc,ddc_auc],3)
-plt.bar(x,y)
-for i, v in enumerate(y):
-	plt.text(i, v, str(v))
-plt.xticks(x,methods)
-plt.ylabel('AUC')
-plt.show()
-'''
-
 # print out estimation time
 print('lasso time:',np.mean(lasso_times))
 print('sis time:',np.mean(sis_times))
