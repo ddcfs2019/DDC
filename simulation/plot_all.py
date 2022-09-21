@@ -36,7 +36,7 @@ df = pd.read_csv(sr_fname,names=['threshold','w','alpha_delta','FPR','TPR','time
 #df = df[df['w'] == 0.5]
 df_mean = df.groupby('threshold').mean()
 sr_fprs = df_mean['FPR'].to_numpy()
-sr_tprs = df_mean['TPR'].to_numpy()-0.2
+sr_tprs = df_mean['TPR'].to_numpy()
 sr_times = df_mean['time'].to_numpy()
 
 idx = np.argsort(sr_fprs)
@@ -91,10 +91,10 @@ ddc_auc = auc(mean_fpr,ddc_mean_tpr)
 #print('Lasso:',lasso_auc,'SIS:',sis_auc,'SR:',sr_auc,'FDR:',fdr_auc,'DDC:',ddc_auc)
 # plot
 plt.plot([0.0]+list(mean_fpr),[0.0]+list(lasso_mean_tpr),'k-',label='Lasso (AUC=%0.3f)'%(lasso_auc), c='0.2')
-plt.plot([0.0]+list(mean_fpr),[0.0]+list(ddc_mean_tpr),'k:',label='SIS (AUC=%0.3f)'%(ddc_auc), c='0.2')
+plt.plot([0.0]+list(mean_fpr),[0.0]+list(sis_mean_tpr),'k:',label='SIS (AUC=%0.3f)'%(sis_auc), c='0.2')
 plt.plot([0.0]+list(mean_fpr),[0.0]+list(sr_mean_tpr),'k-.',label='SR (AUC=%0.3f)'%(sr_auc), c='0.4')
 plt.plot([0.0]+list(mean_fpr),[0.0]+list(fdr_mean_tpr),'k--',label='FDR (AUC=%0.3f)'%(fdr_auc), c='0.4')
-plt.plot([0.0]+list(mean_fpr),[0.0]+list(sis_mean_tpr),'k+-',label='DDC (AUC=%0.3f)'%(sis_auc))
+plt.plot([0.0]+list(mean_fpr),[0.0]+list(ddc_mean_tpr),'k+-',label='DDC (AUC=%0.3f)'%(ddc_auc))
 
 plt.xlabel('False Positive Rate')
 plt.ylabel('True Positive Rate')
