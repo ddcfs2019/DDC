@@ -138,7 +138,7 @@ for w in np.arange(0.1,1,0.1): # tunable parameters
 			se = time.time()
 
 			clf = RandomForestClassifier(random_state=0)
-			probas_ = clf.fit(X,y).predict_proba(new_X)
+			probas_ = clf.fit(new_X,y).predict_proba(new_X)
 			pred = np.where(probas_[:,1]>threshold,1,0)
 			tpr, fpr = tpr_fpr(y,pred)
 
