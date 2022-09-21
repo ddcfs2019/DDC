@@ -11,11 +11,11 @@ dataset = sys.argv[1] # small or large
 
 mean_fpr = np.linspace(0,1,100)
 
-lasso_fname = 'fb_results/lasso_'+dataset+'.txt'
-sr_fname = 'fb_results/sr_'+dataset+'.txt'
-sis_fname = 'fb_results/sis_'+dataset+'.txt'
-fdr_fname = 'fb_results/fdr_'+dataset+'.txt'
-ddc_fname = 'fb_results/ddc_'+dataset+'.txt'
+lasso_fname = 'lasso_'+dataset+'.txt'
+sr_fname = 'sr_'+dataset+'.txt'
+sis_fname = 'sis_'+dataset+'.txt'
+fdr_fname = 'fdr_'+dataset+'.txt'
+ddc_fname = 'ddc_'+dataset+'.txt'
 
 # Lasso
 df = pd.read_csv(lasso_fname,names=['threshold','lda','FPR','TPR','time'])
