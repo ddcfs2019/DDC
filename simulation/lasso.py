@@ -1,18 +1,22 @@
 import os,sys
 import time
+import random
 
 import numpy as np 
 
 from sklearn import linear_model
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import KFold
 
 
-training_fname = sys.argv[1]
+np.random.seed(2019)
 
-lda = float(sys.argv[2]) # lambda value used in the lasso
+training_fname = sys.argv[1] # orginial feature-based file
 
 fh = open(training_fname,'r')
-lines = fh.readlines()
+lines = fh.readlines()[1:]
 fh.close()
+random.shuffle(lines)
 
 # generate X and y
 X = []
@@ -31,26 +35,6 @@ for i in range(len(lines)):
 
 X = np.array(X)
 y = np.array(y)
-
-# generate true relevant features
-truth_idx = [] # store their indicies
-true_features = []
-arr = lines[0].strip().split(';')
-p = len(arr) - 1
-for i in range(p):
-	elem = arr[i].strip().split(',')
-	structure = elem[1].strip()
-	if len(structure) == 1:
-		truth_idx.append(i)
-		true_features.append(structure)
-	else:
-		temp = [int(x) for x in structure[2:].split('/')]
-		if sum(temp) == 0:
-			truth_idx.append(i)
-			true_features.append(structure)
-truth = [0]*p
-for idx in truth_idx:
-	truth[idx] = 1
 
 
 def tpr_fpr(truth,pred):
@@ -73,20 +57,41 @@ def tpr_fpr(truth,pred):
 	return (tpr, fpr)
 
 
-start_time = time.time()
-# build the model
-clf = linear_model.Lasso(alpha=lda,random_state=0)
+selection_times = []
+estimation_times = []
+percent_features = []
 
-# fit the model and get tpr and fpr
-clf.fit(X,y)
+for lda in np.arange(0.01,0.1,0.01): # tunable parameters
+	# build the model
+	ss = time.time()
 
-# find the variables to keep
-pred = clf.coef_
-#print(pred)
+	clf = linear_model.Lasso(alpha=lda,random_state=7)
+	clf.fit(X,y)
+	coefs = clf.coef_
+	selected_indx = []
+	for i in range(len(coefs)):
+		if coefs[i] != 0:
+			selected_indx.append(i)
+	new_X = X[:,selected_indx]
+	#percent_features.append(float(len(selected_indx))/X.shape[1])
 
-tpr, fpr = tpr_fpr(truth, np.where(pred>0,1,0).tolist())
 
-end_time = time.time()
+	es = time.time()
+	selection_times.append(es-ss)
+	
 
-# output the measures
-print(tpr,',',fpr,',',end_time - start_time)
+	for threshold in np.arange(0.1,1,0.1): # thresholds
+
+		se = time.time()
+
+		clf = RandomForestClassifier(random_state=7)
+
+		clf.fit(new_X,y)
+		probas_ =  clf.predict_proba(new_X)
+		pred = np.where(probas_[:,1]>threshold,1,0)
+		tpr, fpr = tpr_fpr(y,pred)
+
+		ee = time.time()
+		estimation_times.append(ee-se)
+
+		print(threshold,',',lda,',',fpr,',',tpr,',',ee-se)

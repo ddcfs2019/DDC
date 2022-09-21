@@ -1,60 +1,20 @@
 import os,sys
 import time
 import math
+import random
 
 import numpy as np 
 
 from sklearn import linear_model
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import KFold
 
 import scipy
 from scipy import stats
 
-training_fname = sys.argv[1]
+np.random.seed(2019)
 
-fh = open(training_fname,'r')
-lines = fh.readlines()
-fh.close()
-
-# generate X and y
-X = []
-y = []
-for line in lines:
-	sample = []
-	arr = line.strip().split(';')
-
-	for i in range(len(arr)-1):
-		elem = arr[i].strip().split(',')
-		sample.append(int(elem[0].strip()))
-
-	X.append(sample)
-	y.append(int(arr[-1].strip()))
-
-X = np.array(X)
-y = np.array(y)
-n, cols = X.shape
-
-d = int(sys.argv[2]) # 10-20
-#d = int(n/math.log(n))  # d= [d/log(n)] 
-
-# generate true relevant features
-truth_idx = [] # store their indicies
-#true_features = []
-arr = lines[0].strip().split(';')
-p = len(arr) - 1
-for i in range(p):
-	elem = arr[i].strip().split(',')
-	structure = elem[1].strip()
-	if len(structure) == 1:
-		truth_idx.append(i)
-		#true_features.append(structure)
-	else:
-		temp = [int(x) for x in structure[2:].split('/')]
-		if sum(temp) == 0:
-			truth_idx.append(i)
-			#true_features.append(structure)
-truth = [0]*p
-for idx in truth_idx:
-	truth[idx] = 1
+training_fname = sys.argv[1] # original feature file
 
 
 def tpr_fpr(truth,pred):
@@ -77,24 +37,63 @@ def tpr_fpr(truth,pred):
 	return (tpr, fpr)
 
 
+fh = open(training_fname,'r')
+lines = fh.readlines()
+fh.close()
+
+# generate X and y
+X = []
+y = []
+for i in range(len(lines)):
+	line = lines[i]
+	sample = []
+	arr = line.strip().split(';')
+
+	for j in range(len(arr)-1):
+		elem = arr[j].strip().split(',')
+		sample.append(int(elem[0].strip()))
+
+	X.append(sample)
+	y.append(int(arr[-1].strip()))
+
+X = np.array(X)
+y = np.array(y)
+
+
+n, cols = X.shape
+
 # choose top d features
-start_time = time.time()
+selection_times = []
+estimation_times = []
 
-corrs = []
-for c in range(cols):
-	corr = stats.pearsonr(X[:,c].tolist(), y.tolist())
-	corrs.append(corr)
+for d_percent in np.arange(0.01,0.1,0.01): # tunable parameters: d
 
-#d = len(truth_idx)
-top_d = sorted(range(len(corrs)), key=lambda i: corrs[i], reverse=True)[:d]
-pred = [0]*p
-for idx in top_d:
-	pred[idx] = 1
+	ss = time.time()
 
-# calcualte tpr and fpr
-tpr, fpr = tpr_fpr(truth,pred)
+	d = int(d_percent*cols)
+	corrs = []
+	for c in range(cols):
+		corr = stats.pearsonr(X[:,c].tolist(), y.tolist())
+		corrs.append(corr)
 
-end_time = time.time()
+	top_d = sorted(range(len(corrs)), key=lambda i: corrs[i], reverse=True)[:d]
 
-# output the measures
-print(tpr,',',fpr,',',end_time - start_time)
+	new_X = X[:,top_d]
+
+	es = time.time()
+	selection_times.append(es-ss)
+
+	for threshold in np.arange(0.1,1,0.1): # thresholds
+
+		se = time.time()
+
+		clf = RandomForestClassifier(random_state=0)
+
+		probas_ = clf.fit(new_X,y).predict_proba(new_X)
+		pred = np.where(probas_[:,1]>threshold,1,0)
+		tpr, fpr = tpr_fpr(y,pred)
+
+		ee = time.time()
+		estimation_times.append(ee-se)
+
+		print(threshold,',',d_percent,',',fpr,',',tpr,',',ee-se)

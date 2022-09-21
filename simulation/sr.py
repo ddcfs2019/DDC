@@ -1,11 +1,32 @@
 import os,sys
-import time
+import time,random
 
 import numpy as np 
 
 from sklearn import linear_model
-
+from sklearn.ensemble import RandomForestClassifier
 import scipy.stats as stat
+from sklearn.model_selection import KFold
+
+
+def tpr_fpr(truth,pred):
+	# calculate true positive rate and false positive rate
+	tp,fp,fn,tn = 0.0,0.0,0.0,0.0
+	for i in range(len(truth)):
+		t = truth[i]
+		p = pred[i]
+		if t == 1 and p == 1:
+			tp += 1
+		elif t == 1 and p == 0:
+			fn += 1
+		elif t == 0 and p == 1:
+			fp += 1
+		else:
+			tn += 1
+	tpr = tp / (tp + fn)
+	fpr = fp / (fp + tn)
+
+	return (tpr, fpr)
 
 
 class LogisticReg:
@@ -44,14 +65,13 @@ class LogisticReg:
 
 
 
-training_fname = sys.argv[1]
+training_fname = sys.argv[1] # original feature file
 
 fh = open(training_fname,'r')
-lines = fh.readlines()
+lines = fh.readlines()[1:]
 fh.close()
+random.shuffle(lines)
 
-w = float(sys.argv[2]) # initial prob. of false positive: w0
-alpha_delta = float(sys.argv[3]) # alpha_delta
 
 # generate X and y
 X = []
@@ -59,7 +79,7 @@ y = []
 for i in range(len(lines)):
 	line = lines[i]
 	sample = []
-	arr = line.strip().split(';')
+	arr = line.strip().split(',')
 
 	for j in range(len(arr)-1):
 		elem = arr[j].strip().split(',')
@@ -71,76 +91,58 @@ for i in range(len(lines)):
 X = np.array(X)
 y = np.array(y)
 
-# generate true relevant features
-truth_idx = [] # store their indicies
-#true_features = []
-arr = lines[0].strip().split(';')
-p = len(arr) - 1
-for i in range(p):
-	elem = arr[i].strip().split(',')
-	structure = elem[1].strip()
-	if len(structure) == 1:
-		truth_idx.append(i)
-		#true_features.append(structure)
-	else:
-		temp = [int(x) for x in structure[2:].split('/')]
-		if sum(temp) == 0:
-			truth_idx.append(i)
-			#true_features.append(structure)
-truth = [0]*p
-for idx in truth_idx:
-	truth[idx] = 1
+
+selection_times = []
+estimation_times = []
+percent_features = []
 
 
-def tpr_fpr(truth,pred):
-	# calculate true positive rate and false positive rate
-	tp,fp,fn,tn = 0.0,0.0,0.0,0.0
-	for i in range(len(truth)):
-		t = truth[i]
-		p = pred[i]
-		if t == 1 and p == 1:
-			tp += 1
-		elif t == 1 and p == 0:
-			fn += 1
-		elif t == 0 and p == 1:
-			fp += 1
-		else:
-			tn += 1
-	tpr = tp / (tp + fn)
-	fpr = fp / (fp + tn)
+for w in np.arange(0.1,1,0.1): # tunable parameters
+	for alpha_delta in np.arange(0.1,1,0.1): # tunable parameters
+		ss = time.time()
 
-	return (tpr, fpr)
+		r,c = X.shape
 
+		pred_idx = []
+		for i in range(c):
+			alpha = w / (2*(i+1))
+			f = X[:,i].reshape(-1,1)
 
-start_time = time.time()
+			# fit the model and get tpr and fpr
+			try:
+				clf = LogisticReg()
+				clf.fit(f,y)
 
-# build the SR model
-clf = LogisticReg(random_state=0)
+				pvalue = clf.p_values
+				if pvalue[0] < alpha:
+					pred_idx.append(i)
+					w += alpha_delta - alpha
+				else:
+					w -= alpha
+			except:
+				pred_idx.append(i)
+				pass
 
-r,c = X.shape
-pred_idx = []
-for i in range(c):
-	alpha = w / (2*(i+1))
-	f = X[:,i].reshape(-1,1)
+		random.shuffle(pred_idx)
+		if len(pred_idx) == 0:
+			continue
 
-	# fit the model and get tpr and fpr
-	clf.fit(f,y)
+		new_X = X[:,pred_idx]
+		#percent_features.append(float(len(pred_idx))/X.shape[1])
 
-	pvalue = clf.p_values
-	if pvalue[0] < alpha:
-		pred_idx.append(i)
-		w += alpha_delta - alpha
-	else:
-		w -= alpha
+		es = time.time()
+		selection_times.append(es-ss)
 
 
-pred = [0]*p
-for idx in pred_idx:
-	pred[idx] = 1
+		for threshold in np.arange(0.1,1,0.1): # thresholds
+			se = time.time()
 
-tpr, fpr = tpr_fpr(truth,pred)
+			clf = RandomForestClassifier(random_state=0)
+			probas_ = clf.fit(X,y).predict_proba(new_X)
+			pred = np.where(probas_[:,1]>threshold,1,0)
+			tpr, fpr = tpr_fpr(y,pred)
 
-end_time = time.time()
+			ee = time.time()
+			estimation_times.append(ee-se)
+			print(threshold,',',w,',',alpha_delta,',',fpr,',',tpr,',',ee-se)
 
-# output the measures
-print(tpr,',',fpr,',',end_time - start_time)

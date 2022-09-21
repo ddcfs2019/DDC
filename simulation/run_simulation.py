@@ -2,12 +2,19 @@ import os,sys
 
 import numpy as np
 
-# generate 100 dataset
-for i in range(100):
-	fname = 'simulated_data_100_5500_'+str(i)+'.txt'
-	os.system('python -W ignore generate_simulated_data.py 100 5500 > ' + fname)
+'''
+# generate 10 datasets
+os.system('python -W ignore discretize_generate_Y.py 100')
+for i in range(10):
+	fname = 'data_S_100_5500_fdr/simulated_data_100_5500_'+str(i)+'.txt'
+	os.system('python -W ignore discretize_generate_simulated_data.py 100 5500 > ' + fname)
 
+os.system('python -W ignore discretize_generate_Y.py 1000')
+for i in range(10):
+	fname = 'data_S_1000_170000_fdr/simulated_data_1000_170000_'+str(i)+'.txt'
+	os.system('python -W ignore discretize_generate_simulated_data.py 1000 170000 > ' + fname)
 
+'''
 # a range of values for a specific parameter
 # lasso: 0-0.1
 # sis: 1 - 50 
@@ -15,33 +22,11 @@ for i in range(100):
 # sr-w0 fixed: 0.5, alpha_delta: 0-1
 # sr-alpha_delta fixed: 0.5, w0: 0-1
 # ddc: 0-1
-v = np.linspace(0, 1, 50)
-for k in range(1,len(v)-1):
-	tprs = []
-	fprs = []
-	times = []
+alg = sys.argv[1]
 
-	for i in range(100):
-		fname = 'simulated_data_100_5500_'+str(i)+'.txt'
+for i in range(5):
+	#fname = 'data_S_100_5500/simulated_data_100_5500_'+str(i)+'.txt'
+	fname = 'data_S_1000_170000/simulated_data_1000_170000_'+str(i)+'.txt'
 
-		command = 'python -W ignore ddc.py ' + fname + ' ' + str(float(v[k])) + ' > line.txt'
-		os.system(command) # float or int
-
-
-		fh = open('line.txt','r')
-		data = fh.read().strip().split(',')
-		fh.close()
-		if os.path.getsize('line.txt') == 0:
-			continue
-
-
-		tprs.append(float(data[0].strip()))
-		fprs.append(float(data[1].strip()))
-		times.append(float(data[2].strip()))
-
-
-	mean_tpr = sum(tprs)/float(len(tprs))
-	mean_fpr = sum(fprs)/float(len(fprs))
-	mean_time = sum(times)/float(len(times))
-
-	print(mean_tpr,',',mean_fpr,',',mean_time)
+	command = 'python -W ignore '+alg+'.py ' + fname
+	os.system(command)
