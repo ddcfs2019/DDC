@@ -19,8 +19,9 @@ demonstrated in a case application on user-brand interaction data from Facebook.
 ### Content
 
 - data:
-  - data/simulation
-  - data/real
+  - data/simulation/data_S_100_5500/     (10 sample files)
+  - data/simulation/data_S_1000_170000/ (files are too large to upload. Please email us to get the files or follow our codes to generate)
+  - data/real (please follow our code to generate the data under specicif format required by our feature selection procedures)
   
 - codes:
   - real/: all implemented algorithms on the real data (small-scale and large-scale)
